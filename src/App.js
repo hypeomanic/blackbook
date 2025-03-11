@@ -24,20 +24,27 @@ function App() {
     });
   }, [auth]);
 
-  // Protect the dashboard and other features
+  // ✅ Protect Routes that require login
   const ProtectedRoute = ({ children }) => {
     if (loading) return <div>Loading...</div>;
     return user ? children : <Navigate to="/login" />;
   };
 
+  // ✅ Redirect users who visit "/" to either Dashboard or Login
+  const PublicRoute = () => {
+    if (loading) return <div>Loading...</div>;
+    return user ? <Navigate to="/dashboard" /> : <Navigate to="/login" />;
+  };
+
   return (
     <Router>
       <Routes>
-        {/* Public Routes */}
+        {/* ✅ Public Routes */}
+        <Route path="/" element={<PublicRoute />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
 
-        {/* Protected Routes */}
+        {/* ✅ Protected Routes */}
         <Route 
           path="/dashboard" 
           element={
@@ -63,8 +70,8 @@ function App() {
           }
         />
         
-        {/* Catch-All */}
-        <Route path="*" element={<Navigate to="/login" />} />
+        {/* ✅ Catch-All Route */}
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>
   );
